@@ -133,6 +133,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
       setImageFile(file);
@@ -141,6 +142,28 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      return;
+    }
+
+    // Try to extract an image URL if dragging from another browser tab
+    const html = e.dataTransfer.getData("text/html");
+    const url = e.dataTransfer.getData("URL");
+
+    let externalUrl = null;
+    if (html) {
+      const match = html.match(/src\s*=\s*["']([^"']+)["']/);
+      if (match && match[1]) {
+        externalUrl = match[1];
+      }
+    } 
+    
+    if (!externalUrl && url && url.startsWith("http")) {
+      externalUrl = url;
+    }
+
+    if (externalUrl) {
+      setImagePreview(externalUrl);
+      setImageFile(null); // Clear file to indicate it's an external URL
     }
   };
 
@@ -185,6 +208,8 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
         const base64Data = imagePreview.split(',')[1];
         finalImageUrl = await uploadImageToImgbb(base64Data);
         setUploadingImage(false);
+      } else if (imagePreview) {
+        finalImageUrl = imagePreview;
       }
 
       const data = {
