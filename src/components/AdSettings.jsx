@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { Save, Smartphone, LayoutTemplate, Square, MonitorSmartphone, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Save, Smartphone, LayoutTemplate, Square, MonitorSmartphone, Loader2, AlertCircle, CheckCircle2, Video, Gift } from "lucide-react";
 
 export default function AdSettings() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +16,7 @@ export default function AdSettings() {
     appOpenAdUnitId: "",
     nativeAdUnitId: "",
     rewardedAdUnitId: "",
+    rewardedInterstitialAdUnitId: "",
   });
 
   useEffect(() => {
@@ -199,6 +200,36 @@ export default function AdSettings() {
                 type="text"
                 name="nativeAdUnitId"
                 value={settings.nativeAdUnitId}
+                onChange={handleChange}
+                placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy"
+                className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
+                <Gift size={16} className="text-gray-400" />
+                Rewarded Ad Unit ID
+              </label>
+              <input
+                type="text"
+                name="rewardedAdUnitId"
+                value={settings.rewardedAdUnitId}
+                onChange={handleChange}
+                placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy"
+                className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
+                <Video size={16} className="text-gray-400" />
+                Rewarded Interstitial Ad Unit ID
+              </label>
+              <input
+                type="text"
+                name="rewardedInterstitialAdUnitId"
+                value={settings.rewardedInterstitialAdUnitId}
                 onChange={handleChange}
                 placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/yyyyyyyyyy"
                 className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm"

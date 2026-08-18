@@ -28,7 +28,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
 
-  const IMGBB_API_KEY = "d59698d287bb7b9136154de7492cda19";
+  const IMGBB_API_KEY = "d59698eba1b06e131cf96fc0a8dc36df";
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -123,9 +123,9 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
     }
   };
 
-  const uploadImageToImgbb = async (file) => {
+  const uploadImageToImgbb = async (base64Data) => {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("image", base64Data);
     
     try {
       const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
@@ -137,7 +137,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
       if (data.success) {
         return data.data.url;
       } else {
-        throw new Error("Failed to upload image to ImgBB");
+        throw new Error(data.error?.message || "Failed to upload image to ImgBB");
       }
     } catch (err) {
       console.error("Image upload error:", err);
@@ -159,9 +159,10 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
     try {
       let finalImageUrl = form.imageUrl;
 
-      if (imageFile) {
+      if (imageFile && imagePreview) {
         setUploadingImage(true);
-        finalImageUrl = await uploadImageToImgbb(imageFile);
+        const base64Data = imagePreview.split(',')[1];
+        finalImageUrl = await uploadImageToImgbb(base64Data);
         setUploadingImage(false);
       }
 
@@ -187,7 +188,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
       onSaved();
     } catch (err) {
       console.error(err);
-      setError("Failed to save. Please try again.");
+      setError(err.message || "Failed to save. Please try again.");
       setUploadingImage(false);
     } finally {
       setSaving(false);
