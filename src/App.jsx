@@ -21,7 +21,7 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
-
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -45,6 +45,7 @@ export default function App() {
     setShowForm(false);
     setEditingPrompt(null);
     setActiveTab("prompts");
+    setRefreshKey(prev => prev + 1);
   };
 
   const handleFormClose = () => {
@@ -66,6 +67,7 @@ export default function App() {
     setShowCategoryForm(false);
     setEditingCategory(null);
     setActiveTab("categories");
+    setRefreshKey(prev => prev + 1);
   };
 
   const handleCategoryClose = () => {
@@ -89,12 +91,12 @@ export default function App() {
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
-      {activeTab === "dashboard" && <Dashboard />}
+      {activeTab === "dashboard" && <Dashboard key={`dashboard-${refreshKey}`} />}
       {activeTab === "prompts" && (
-        <PromptList onEdit={handleEdit} onAdd={handleAdd} />
+        <PromptList key={`prompts-${refreshKey}`} onEdit={handleEdit} onAdd={handleAdd} />
       )}
       {activeTab === "categories" && (
-        <CategoryList onEdit={handleCategoryEdit} onAdd={handleCategoryAdd} />
+        <CategoryList key={`categories-${refreshKey}`} onEdit={handleCategoryEdit} onAdd={handleCategoryAdd} />
       )}
       
       {activeTab === "feedback" && <Feedback />}

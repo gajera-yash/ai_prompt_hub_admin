@@ -125,6 +125,25 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const uploadImageToImgbb = async (base64Data) => {
     const formData = new FormData();
     formData.append("image", base64Data);
@@ -354,7 +373,11 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                 Image / Thumbnail
               </label>
               
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden group cursor-pointer">
+              <div 
+                className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden group cursor-pointer"
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              >
                 <input
                   type="file"
                   accept="image/*"
