@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { LayoutDashboard, FileText, LogOut, Menu, X, Layers, FolderTree, Settings, Terminal } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut, Menu, X, Layers, FolderTree, Settings, Terminal, MessageSquare, Bell } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Dashboard", value: "dashboard", icon: LayoutDashboard },
   { label: "Prompts", value: "prompts", icon: FileText },
   { label: "Categories", value: "categories", icon: Layers },
+  { label: "Feedback", value: "feedback", icon: MessageSquare },
+  { label: "Notifications", value: "notifications", icon: Bell },
   { label: "Ad Settings", value: "ads", icon: Settings },
 ];
 

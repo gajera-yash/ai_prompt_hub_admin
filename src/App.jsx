@@ -8,6 +8,8 @@ import PromptList from "./components/PromptList";
 import PromptForm from "./components/PromptForm";
 import CategoryList from "./components/CategoryList";
 import CategoryForm from "./components/CategoryForm";
+import Feedback from "./components/Feedback";
+import Notifications from "./components/Notifications";
 
 import AdSettings from "./components/AdSettings";
 
@@ -94,6 +96,9 @@ export default function App() {
       {activeTab === "categories" && (
         <CategoryList onEdit={handleCategoryEdit} onAdd={handleCategoryAdd} />
       )}
+      
+      {activeTab === "feedback" && <Feedback />}
+      {activeTab === "notifications" && <Notifications />}
 
       {activeTab === "ads" && <AdSettings />}
 

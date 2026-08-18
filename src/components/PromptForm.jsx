@@ -20,6 +20,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
     promptText: "",
     instructions: "",
     imageUrl: "",
+    isPremium: false,
   });
   
   const [saving, setSaving] = useState(false);
@@ -78,6 +79,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
         promptText: prompt.promptText || "",
         instructions: prompt.instructions || "",
         imageUrl: prompt.imageUrl || "",
+        isPremium: prompt.isPremium || false,
       });
       if (prompt.imageUrl) {
         setImagePreview(prompt.imageUrl);
@@ -101,13 +103,13 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
   }, [form.category, categories, subcategories]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setForm((prev) => {
       // Reset subcategory when category changes
       if (name === "category") {
-        return { ...prev, [name]: value, subcategory: "" };
+        return { ...prev, [name]: type === "checkbox" ? checked : value, subcategory: "" };
       }
-      return { ...prev, [name]: value };
+      return { ...prev, [name]: type === "checkbox" ? checked : value };
     });
   };
 
@@ -176,6 +178,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
         promptText: form.promptText.trim(),
         instructions: form.instructions.trim(),
         imageUrl: finalImageUrl,
+        isPremium: form.isPremium,
         updatedAt: serverTimestamp(),
       };
 
@@ -324,6 +327,25 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                     className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm" 
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <div className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="isPremium"
+                  checked={form.isPremium}
+                  onChange={handleChange}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+              </div>
+              <div>
+                <label className="text-sm font-bold text-amber-900 cursor-pointer" onClick={() => setForm(prev => ({ ...prev, isPremium: !prev.isPremium }))}>
+                  Premium Prompt 💎
+                </label>
+                <p className="text-xs text-amber-700">Only accessible to users who watch an ad or have a subscription.</p>
               </div>
             </div>
 

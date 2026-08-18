@@ -126,7 +126,14 @@ export default function PromptList({ onEdit, onAdd }) {
                   className="hover:bg-gray-50/80 transition-colors group"
                 >
                   <td className="px-4 py-3 text-gray-900 font-medium max-w-[250px] truncate">
-                    {prompt.title}
+                    <div className="flex items-center gap-2">
+                      <span className="truncate">{prompt.title}</span>
+                      {prompt.isPremium && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wide">
+                          Pro
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
