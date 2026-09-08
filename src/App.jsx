@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./config/firebase";
 import Login from "./components/Login";
 import Layout from "./components/Layout";
@@ -24,10 +24,20 @@ export default function App() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      const expirationTime = firebaseUser?.stsTokenManager?.expirationTime;
+
+      if (firebaseUser && expirationTime && Date.now() >= expirationTime) {
+        await signOut(auth);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       setUser(firebaseUser);
       setLoading(false);
     });
+
     return unsubscribe;
   }, []);
 
@@ -79,8 +89,11 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="animate-spin border-2 border-blue-500 border-t-transparent rounded-full w-10 h-10" />
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 shadow-sm">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-slate-900" />
+          Loading workspace
+        </div>
       </div>
     );
   }

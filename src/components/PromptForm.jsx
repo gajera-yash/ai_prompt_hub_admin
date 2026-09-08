@@ -245,35 +245,36 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
       <div 
-        className="absolute inset-0 bg-gray-900/20 backdrop-blur-sm animate-in fade-in duration-200"
+        className="absolute inset-0 bg-slate-950/30 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
       />
       
-      <div className="relative bg-white border border-gray-200 rounded-xl w-full max-w-3xl shadow-xl flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-200">
+      <div className="ui-dialog relative flex max-h-[95vh] max-w-3xl flex-col animate-in zoom-in-95 duration-200">
         
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="ui-dialog-header">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gray-50 rounded-lg">
-              <FileText size={18} className="text-gray-600" />
+            <div className="rounded-xl bg-indigo-50 p-2">
+              <FileText size={18} className="text-indigo-600" />
             </div>
-            <h2 className="text-lg font-bold text-gray-900">
+            <h2 className="text-lg font-semibold text-slate-900">
               {prompt ? "Edit Prompt" : "New Prompt"}
             </h2>
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="ui-icon-button"
+            aria-label="Close prompt form"
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
           <form id="prompt-form" onSubmit={handleSubmit} className="space-y-6">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="ui-label">
                   Title <span className="text-red-500">*</span>
                 </label>
                 <input 
@@ -283,20 +284,20 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                   onChange={handleChange} 
                   required
                   autoFocus
-                  className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm" 
+                  className="ui-input"
                   placeholder="e.g. Expert Copywriter" 
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="ui-label">
                   Main Category <span className="text-red-500">*</span>
                 </label>
                 <select 
                   name="category" 
                   value={form.category} 
                   onChange={handleChange} 
-                  className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm"
+                  className="ui-input"
                   disabled={categoriesLoading}
                   required
                 >
@@ -308,14 +309,14 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="ui-label">
                   Subcategory
                 </label>
                 <select 
                   name="subcategory" 
                   value={form.subcategory} 
                   onChange={handleChange} 
-                  className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm disabled:bg-gray-50 disabled:text-gray-400"
+                  className="ui-input"
                   disabled={!form.category || subcategoriesLoading}
                 >
                   <option value="">
@@ -326,19 +327,19 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                   ))}
                 </select>
                 {form.category && filteredSubcategories.length === 0 && !subcategoriesLoading && (
-                  <p className="text-xs text-amber-600 mt-1">
+                  <p className="mt-1 text-xs text-amber-600">
                     No subcategories found for this category. You can add one in Subcategories tab.
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">AI Tool</label>
+                <label className="ui-label">AI Tool</label>
                 <select 
                   name="aiTool" 
                   value={form.aiTool} 
                   onChange={handleChange} 
-                  className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm"
+                  className="ui-input"
                 >
                   <option value="ChatGPT">ChatGPT</option>
                   <option value="Midjourney">Midjourney</option>
@@ -349,7 +350,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Rating</label>
+                  <label className="ui-label">Rating</label>
                   <input 
                     type="number" 
                     step="0.1"
@@ -358,23 +359,23 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                     name="rating" 
                     value={form.rating} 
                     onChange={handleChange} 
-                    className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm" 
+                    className="ui-input"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Copy Count</label>
+                  <label className="ui-label">Copy Count</label>
                   <input 
                     type="number" 
                     name="copyCount" 
                     value={form.copyCount} 
                     onChange={handleChange} 
-                    className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm" 
+                    className="ui-input"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
               <div className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
@@ -383,10 +384,10 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                   onChange={handleChange}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                <div className="h-6 w-11 rounded-full bg-slate-300 transition-colors peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-100 peer-checked:bg-amber-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-['']"></div>
               </div>
               <div>
-                <label className="text-sm font-bold text-amber-900 cursor-pointer" onClick={() => setForm(prev => ({ ...prev, isPremium: !prev.isPremium }))}>
+                <label className="cursor-pointer text-sm font-semibold text-amber-900" onClick={() => setForm(prev => ({ ...prev, isPremium: !prev.isPremium }))}>
                   Premium Prompt 💎
                 </label>
                 <p className="text-xs text-amber-700">Only accessible to users who watch an ad or have a subscription.</p>
@@ -394,12 +395,12 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="ui-label">
                 Image / Thumbnail
               </label>
               
               <div 
-                className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden group cursor-pointer"
+                className="group relative mt-1 flex cursor-pointer justify-center overflow-hidden rounded-xl border-2 border-dashed border-slate-200 bg-white px-6 pb-6 pt-5 transition-colors hover:border-indigo-400 hover:bg-indigo-50/40"
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
@@ -407,27 +408,27 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                 />
                 
-                <div className="space-y-2 text-center relative z-0">
+                <div className="relative z-0 space-y-2 text-center">
                   {imagePreview ? (
                     <div className="flex flex-col items-center">
-                      <img src={imagePreview} alt="Preview" className="h-32 object-contain rounded-md shadow-sm mb-3" />
-                      <p className="text-xs text-gray-500 font-medium">Click or drag to replace image</p>
+                      <img src={imagePreview} alt="Preview" className="mb-3 h-32 rounded-lg object-contain shadow-sm" />
+                      <p className="text-xs font-medium text-slate-500">Click or drag to replace image</p>
                     </div>
                   ) : (
                     <>
-                      <div className="mx-auto h-12 w-12 text-gray-400">
+                      <div className="mx-auto h-12 w-12 text-slate-400">
                         <ImageIcon size={48} strokeWidth={1} />
                       </div>
-                      <div className="flex text-sm text-gray-600 justify-center">
-                        <span className="relative rounded-md font-medium text-blue-600 hover:text-blue-500">
+                      <div className="flex justify-center text-sm text-slate-600">
+                        <span className="relative rounded-md font-medium text-indigo-600 hover:text-indigo-500">
                           Upload a file
                         </span>
                         <p className="pl-1">or drag and drop</p>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-slate-500">
                         PNG, JPG, GIF up to 10MB
                       </p>
                     </>
@@ -437,7 +438,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="ui-label">
                 Prompt Text <span className="text-red-500">*</span>
               </label>
               <textarea 
@@ -446,25 +447,25 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
                 onChange={handleChange} 
                 rows={5}
                 required
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm resize-y font-mono" 
+                className="ui-input resize-y py-3 font-mono"
                 placeholder="Act as a professional copywriter..." 
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Instructions (Optional)</label>
+              <label className="ui-label">Instructions (Optional)</label>
               <textarea 
                 name="instructions" 
                 value={form.instructions} 
                 onChange={handleChange} 
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm resize-y" 
+                className="ui-input resize-y py-3"
                 placeholder="How to use this prompt..." 
               />
             </div>
 
             {error && (
-              <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 flex items-center gap-2">
+              <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                 <AlertTriangle size={16} />
                 {error}
               </div>
@@ -473,12 +474,12 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
           </form>
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50 rounded-b-xl">
+        <div className="ui-dialog-footer">
           <button 
             type="button" 
             onClick={onClose} 
             disabled={saving}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
+            className="ui-button-secondary"
           >
             Cancel
           </button>
@@ -486,7 +487,7 @@ export default function PromptForm({ prompt, onClose, onSaved }) {
             type="submit" 
             form="prompt-form"
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 disabled:opacity-50 transition-colors shadow-sm"
+            className="ui-button-primary"
           >
             {saving || uploadingImage ? (
               <Loader2 size={16} className="animate-spin" />

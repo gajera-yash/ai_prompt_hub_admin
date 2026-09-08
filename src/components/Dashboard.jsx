@@ -15,7 +15,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f59e0b', '#10b981', '#3b82f6'];
+const COLORS = ['#4f46e5', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'];
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -28,6 +28,12 @@ export default function Dashboard() {
         const prompts = snapshot.docs.map((doc) => doc.data());
 
         const catSnapshot = await getDocs(collection(db, "categories"));
+        const categoryNames = catSnapshot.docs
+          .map((doc) => doc.data()?.name)
+          .filter((name) => typeof name === "string" && name.trim());
+
+        const uniqueCategoryCount = new Set(categoryNames.map((name) => name.trim())).size;
+
         let subcategoriesCount = 0;
         catSnapshot.docs.forEach(doc => {
           const data = doc.data();
@@ -79,7 +85,7 @@ export default function Dashboard() {
 
         setStats({
           total,
-          categories: Object.keys(categoryMap).length,
+          categories: uniqueCategoryCount,
           subcategories: subcategoriesCount,
           topCategory: topCategory[0],
           topTool: topTool[0],
@@ -99,12 +105,14 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[70vh]">
-        <div className="relative w-16 h-16">
-          <div className="absolute inset-0 rounded-full border-4 border-indigo-100"></div>
-          <div className="absolute inset-0 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></div>
-        </div>
-        <p className="mt-4 text-indigo-900 font-medium tracking-wide animate-pulse">Loading dashboard...</p>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4" aria-label="Loading dashboard">
+        {["one", "two", "three", "four"].map((item) => (
+          <div key={item} className="ui-card space-y-4 p-5">
+            <div className="h-10 w-10 animate-pulse rounded-lg bg-slate-100" />
+            <div className="h-8 w-16 animate-pulse rounded bg-slate-100" />
+            <div className="h-3 w-24 animate-pulse rounded bg-slate-100" />
+          </div>
+        ))}
       </div>
     );
   }
@@ -112,48 +120,40 @@ export default function Dashboard() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 space-y-6 lg:space-y-8 pb-10">
       
-      {/* Hero Section with Glassmorphism */}
-      <div className="relative rounded-2xl overflow-hidden shadow-lg border border-white/20 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-950 p-8 lg:p-12">
-        <div className="absolute top-0 right-0 w-full h-full opacity-40 pointer-events-none" style={{
-          backgroundImage: "url('/assets/dashboard_hero.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center right",
-          maskImage: "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)",
-          WebkitMaskImage: "-webkit-linear-gradient(right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)"
-        }}></div>
-        
-        <div className="relative z-10 max-w-xl text-white">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold uppercase tracking-wider mb-4">
-            <Sparkles size={14} className="text-amber-300" />
+      <div className="ui-card flex flex-col justify-between gap-6 p-7 sm:flex-row sm:items-end lg:p-8">
+        <div className="max-w-2xl">
+          <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+            <Sparkles size={12} />
             <span>Admin Portal</span>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
-            Welcome back to PromptHub!
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 lg:text-4xl">
+            Welcome back to Prompt Hub
           </h2>
-          <p className="text-indigo-100/80 leading-relaxed text-sm lg:text-base">
-            Your centralized command center. Manage your mobile app's prompts, categories, and track real-time user engagement through beautiful analytics.
+          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 lg:text-base">
+            A concise overview of your prompt library, category structure, and user engagement.
           </p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
+          <span className="font-medium text-slate-900">{stats?.totalCopies?.toLocaleString?.() || 0}</span> total prompt copies
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {[
-          { label: "Total Prompts", value: stats?.total, icon: FileText, color: "from-blue-500 to-indigo-600", bg: "bg-blue-50 text-blue-600" },
-          { label: "Total Categories", value: stats?.categories, icon: Layers, color: "from-purple-500 to-pink-600", bg: "bg-purple-50 text-purple-600" },
-          { label: "Subcategories", value: stats?.subcategories, icon: FolderTree, color: "from-emerald-400 to-teal-500", bg: "bg-teal-50 text-teal-600" },
-          { label: "Total Copies", value: stats?.totalCopies, icon: Activity, color: "from-amber-400 to-orange-500", bg: "bg-orange-50 text-orange-600" },
+          { label: "Total Prompts", value: stats?.total, icon: FileText },
+          { label: "Total Categories", value: stats?.categories, icon: Layers },
+          { label: "Subcategories", value: stats?.subcategories, icon: FolderTree },
+          { label: "Total Copies", value: stats?.totalCopies, icon: Activity },
         ].map((item, i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-            <div className={`absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-10 bg-gradient-to-br ${item.color} blur-2xl group-hover:opacity-20 transition-opacity`}></div>
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-2.5 rounded-xl ${item.bg}`}>
+          <div key={i} className="ui-card p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                 <item.icon size={20} />
               </div>
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{item.value || 0}</p>
-              <p className="text-xs font-medium text-gray-500 mt-1">{item.label}</p>
+              <p className="text-3xl font-semibold tracking-tight text-slate-900">{item.value || 0}</p>
+              <p className="mt-1 text-sm text-slate-500">{item.label}</p>
             </div>
           </div>
         ))}
@@ -162,8 +162,8 @@ export default function Dashboard() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart: Categories */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-          <h3 className="text-base font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <div className="ui-card p-6">
+          <h3 className="mb-6 flex items-center gap-2 text-base font-semibold text-slate-900">
             <Layers size={18} className="text-indigo-500" />
             Prompts by Category
           </h3>
@@ -191,12 +191,12 @@ export default function Dashboard() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-gray-400 text-sm">No category data</div>
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">No category data</div>
             )}
           </div>
-          <div className="flex flex-wrap justify-center gap-3 mt-4">
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
             {stats?.categoryData?.map((entry, index) => (
-              <div key={index} className="flex items-center gap-1.5 text-xs text-gray-600">
+              <div key={index} className="flex items-center gap-1.5 text-xs text-slate-600">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
                 {entry.name}
               </div>
@@ -205,9 +205,9 @@ export default function Dashboard() {
         </div>
 
         {/* Bar Chart: AI Tools */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-          <h3 className="text-base font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <Sparkles size={18} className="text-pink-500" />
+        <div className="ui-card p-6">
+          <h3 className="mb-6 flex items-center gap-2 text-base font-semibold text-slate-900">
+            <Sparkles size={18} className="text-indigo-500" />
             Top AI Tools
           </h3>
           <div className="h-[300px] w-full">
@@ -221,7 +221,7 @@ export default function Dashboard() {
                     cursor={{ fill: '#f8fafc' }}
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   />
-                  <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={50}>
+                   <Bar dataKey="value" fill="#4f46e5" radius={[4, 4, 0, 0]} maxBarSize={50}>
                     {stats.toolData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -229,43 +229,43 @@ export default function Dashboard() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-gray-400 text-sm">No tool data</div>
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">No tool data</div>
             )}
           </div>
         </div>
       </div>
 
       {/* Trending Prompts Table */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+      <div className="ui-card overflow-hidden">
+        <div className="border-b border-slate-100 p-6">
+          <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900">
             <TrendingUp size={18} className="text-emerald-500" />
             Most Copied Prompts
           </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead>
-              <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider">
+            <thead className="sticky top-0 z-10 bg-slate-50 text-xs uppercase tracking-wider text-slate-500 shadow-[0_1px_0_0_rgb(226_232_240)]">
+              <tr>
                 <th className="px-6 py-4 font-medium">Prompt Title</th>
                 <th className="px-6 py-4 font-medium">Category</th>
                 <th className="px-6 py-4 font-medium">AI Tool</th>
                 <th className="px-6 py-4 font-medium text-right">Copies</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-slate-200">
               {stats?.trendingPrompts?.length > 0 ? (
                 stats.trendingPrompts.map((prompt, index) => (
-                  <tr key={prompt.id || index} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 max-w-[250px] truncate">
+                  <tr key={prompt.id || index} className="transition-colors hover:bg-slate-50">
+                    <td className="max-w-[250px] truncate px-6 py-4 font-medium text-slate-900">
                       {prompt.title}
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
                         {prompt.category || "Uncategorized"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">
+                    <td className="px-6 py-4 text-slate-600">
                       {prompt.aiTool || "—"}
                     </td>
                     <td className="px-6 py-4 text-right font-bold text-emerald-600">
@@ -275,7 +275,7 @@ export default function Dashboard() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-gray-400 bg-gray-50/30">
+                    <td colSpan={4} className="bg-slate-50/50 px-6 py-8 text-center text-slate-400">
                     No trending prompts found. Keep growing your library!
                   </td>
                 </tr>

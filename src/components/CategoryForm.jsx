@@ -49,42 +49,43 @@ export default function CategoryForm({ category, onClose, onSaved }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-gray-900/20 backdrop-blur-sm animate-in fade-in duration-200"
+        className="absolute inset-0 bg-slate-950/30 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
       />
       
       {/* Modal */}
-      <div className="relative bg-white border border-gray-200 rounded-xl w-full max-w-md shadow-xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
+      <div className="ui-dialog relative flex max-h-[90vh] max-w-md flex-col animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="ui-dialog-header">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gray-50 rounded-lg">
-              <Layers size={18} className="text-gray-600" />
+            <div className="rounded-xl bg-indigo-50 p-2">
+              <Layers size={18} className="text-indigo-600" />
             </div>
-            <h2 className="text-lg font-bold text-gray-900">
+            <h2 className="text-lg font-semibold text-slate-900">
               {category ? "Edit Category" : "New Category"}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="ui-icon-button"
+            aria-label="Close category form"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Form Body */}
-        <div className="p-6 overflow-y-auto custom-scrollbar">
+        <div className="overflow-y-auto p-6 custom-scrollbar">
           <form id="category-form" onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+              <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="ui-label">
                 Category Name
               </label>
               <input
@@ -92,7 +93,7 @@ export default function CategoryForm({ category, onClose, onSaved }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Marketing, Development, SEO..."
-                className="w-full px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all text-sm shadow-sm"
+                className="ui-input"
                 required
                 autoFocus
               />
@@ -101,12 +102,12 @@ export default function CategoryForm({ category, onClose, onSaved }) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50 rounded-b-xl">
+        <div className="ui-dialog-footer">
           <button
             type="button"
             onClick={onClose}
             disabled={saving}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
+            className="ui-button-secondary"
           >
             Cancel
           </button>
@@ -114,7 +115,7 @@ export default function CategoryForm({ category, onClose, onSaved }) {
             type="submit"
             form="category-form"
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 disabled:opacity-50 transition-colors shadow-sm"
+            className="ui-button-primary"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             {saving ? "Saving..." : "Save Category"}
